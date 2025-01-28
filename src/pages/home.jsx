@@ -3,8 +3,8 @@ import { GlobalContext } from '../context/context'
 import { getAuth, sendEmailVerification, signOut, updateEmail, verifyBeforeUpdateEmail } from 'firebase/auth'
 
 const Home = () => {
-  useEffect (()=>{
   
+  useEffect (()=>{
   },[])
   let {state , dispatch}= useContext(GlobalContext)
   let [showForm ,setShowForm] = useState(false)
@@ -27,26 +27,28 @@ const Home = () => {
   }
   const verificationSend = ()=>{
     sendEmailVerification(auth.currentUser)
-.then((res) => {
-  // Email verification sent!
-  // ...
-  console.log(res)
-});
+    .then((res) => {
+      // Email verification sent!
+      // ...
+      console.log(res)
+    });
   }
   const logoutUser =()=>{
-
+    
     const auth = getAuth();
-signOut(auth).then(() => {
-  // Sign-out successful.
-}).catch((error) => {
-  // An error happened.
-});
-
+    signOut(auth).then(() => {
+      // Sign-out successful.
+    }).catch((error) => {
+      // An error happened.
+    });
+    
   }
+  
   return (
     <div>
       <h1>{state?.user.displayName}</h1>
       <h4>{state?.user.email}</h4>
+     
   
        <button onClick={() => setShowForm((oldValue) => !oldValue)}>
         {(showForm) ? "Hide" : "Show"} Form
@@ -60,7 +62,11 @@ signOut(auth).then(() => {
 :
 null
 }
+{state?.user.emailVerified == false?
 <button onClick={verificationSend}>send verification</button>
+:
+null
+}
 {state?.isLogin == true ?
  <button onClick={logoutUser}>logout</button>
  :
