@@ -5,10 +5,12 @@ import { getAuth, sendEmailVerification, signOut, updateEmail, verifyBeforeUpdat
 const Home = () => {
   
   useEffect (()=>{
+    setUserName(state?.user.displayName)
   },[])
   let {state , dispatch}= useContext(GlobalContext)
   let [showForm ,setShowForm] = useState(false)
   let  [newEmail ,setNewEmail] = useState("")
+  let [userName , setUserName] = useState("")
   const auth = getAuth();
   const changeEmail = (e) => {
     e.preventDefault();
@@ -46,11 +48,8 @@ const Home = () => {
   
   return (
     <div>
-      <h1>{state?.user.displayName}</h1>
-      <h4>{state?.user.email}</h4>
-     
-  
-       <button onClick={() => setShowForm((oldValue) => !oldValue)}>
+      <div style={{border:'1px solid black',display:'flex',alignItems:'center',justifyContent:'center'}}>
+        <div>  <button onClick={() => setShowForm((oldValue) => !oldValue)}>
         {(showForm) ? "Hide" : "Show"} Form
       </button>
 
@@ -62,16 +61,30 @@ const Home = () => {
 :
 null
 }
+</div>
+        <div style={{display:'flex',flexDirection:'column',alignItems:"center"}}>
+     <img style={{height:'200px',width:'200px',borderRadius:'50%'}} src={state?.user.photoURL} alt="" />
+      <div style={{fontSize:'28px'}}>{userName}</div>
+      <p>{state?.user.email}</p>
+      
+
+  
+     
 {state?.user.emailVerified == false?
 <button onClick={verificationSend}>send verification</button>
 :
 null
 }
+ </div>
+ <div>
 {state?.isLogin == true ?
  <button onClick={logoutUser}>logout</button>
  :
  
  null }
+
+ </div>
+ </div>
     </div>
   )
 }
