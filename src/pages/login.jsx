@@ -7,6 +7,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { GithubAuthProvider,signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider } from "firebase/auth";
 
 const Login = () => {
   const [alertOpen, setAlertOpen] = useState(false);
@@ -14,12 +15,37 @@ const Login = () => {
   const [invalidMsg, setInvalidMsg] = useState(false);
   const [errorMsg, setErrorMsg] = useState("")
   const auth = getAuth();
-  const provider = new GithubAuthProvider();
+  const providerGoogle = new GoogleAuthProvider();
+  const providerGithub = new GithubAuthProvider();
   
   const [showPassword, setShowPassword] = useState(false);
+
+  const loginWithGoogle = (e)=>{
+    e.preventDefault()
+    signInWithPopup(auth, providerGoogle)
+  .then((result) => {
+    // This gives you a Google Access Token. You can use it to access the Google API.
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    const token = credential.accessToken;
+    // The signed-in user info.
+    const user = result.user;
+    // IdP data available using getAdditionalUserInfo(result)
+    // ...
+  }).catch((error) => {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // The email of the user's account used.
+    const email = error.customData.email;
+    // The AuthCredential type that was used.
+    const credential = GoogleAuthProvider.credentialFromError(error);
+    // ...
+    console.log(errorCode,errorMessage,email,credential)
+  });
+  }
 const loginWithGithub = (e)=>{
   e.preventDefault()
-  signInWithPopup(auth, provider)
+  signInWithPopup(auth, providerGithub)
   .then((result) => {
     // This gives you a GitHub Access Token. You can use it to access the GitHub API.
     const credential = GithubAuthProvider.credentialFromResult(result);
@@ -104,12 +130,15 @@ const loginWithGithub = (e)=>{
   };
 
   const forgetPassword = () => {
-    sendPasswordResetEmail(auth, email)
+    sendPasswordResetEmail(auth, loginFormik.values.email)
       .then(() => {
         console.log("password reset email send");
       })
       .catch((error) => {
         console.log(error);
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        setErrorMsg(error)
       });
   };
 
@@ -186,6 +215,10 @@ const loginWithGithub = (e)=>{
         <form onSubmit={loginWithGithub}>
         <Button variant="contained" type='submit'>Login with Github</Button>
 
+        </form>
+        <form onSubmit={loginWithGoogle}>
+        <Button variant="contained" type='submit'>Login with Google</Button>
+          
         </form>
 
       </div>
