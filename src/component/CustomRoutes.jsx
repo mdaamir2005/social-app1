@@ -4,6 +4,7 @@ import Home from '../pages/home'
 import Login from '../pages/login'
 import Signup from '../pages/signup'
 import { GlobalContext } from '../context/context'
+import Profile from '../pages/profile'
 
 const CustomRoutes = () => {
    let {state ,dispatch} = useContext(GlobalContext)
@@ -14,6 +15,8 @@ const CustomRoutes = () => {
     <Routes>
         
         <Route index element={<Home/>}/>
+        <Route path='/profile' element={<Profile/>}/>
+
         
         <Route path='*' element={<Navigate to={"/"}/>}/>
       

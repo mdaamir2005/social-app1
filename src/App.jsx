@@ -4,7 +4,7 @@ import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useContext, useEffect } from "react";
 import { Link } from "react-router";
 import { GlobalContext } from "./context/context";
-
+import "./App.css"
 function App() {
   let {state  ,dispatch} = useContext(GlobalContext)
   const firebaseConfig = {
